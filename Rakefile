@@ -15,8 +15,8 @@ task :build => :jar
 task :install => :jar
 
 ADAPTERS = %w[derby h2 hsqldb mssql mysql postgresql sqlite3].map { |a| "activerecord-jdbc#{a}-adapter" }
-DRIVERS  = %w[derby h2 hsqldb jtds mysql postgres sqlite3].map { |a| "jdbc-#{a}" }
-TARGETS = ( ADAPTERS + DRIVERS )
+DRIVERS = %w[derby h2 hsqldb jtds mysql postgres sqlite3].map { |a| "jdbc-#{a}" }
+TARGETS = (ADAPTERS + DRIVERS)
 
 rake = lambda { |task| ruby "-S", "rake", task }
 get_version = lambda { Bundler.load_gemspec('activerecord-jdbc-adapter.gemspec').version }
@@ -53,15 +53,15 @@ task "drivers:install" => 'install:drivers'
 # ADAPTERS
 
 desc "Build adapters"
-task "build:adapters" => [ 'build' ] + ADAPTERS.map { |name| "#{name}:build" }
+task "build:adapters" => ['build'] + ADAPTERS.map { |name| "#{name}:build" }
 task "adapters:build" => 'build:adapters'
 
 desc "Install adapters"
-task "install:adapters" => [ 'install' ] + ADAPTERS.map { |name| "#{name}:install" }
+task "install:adapters" => ['install'] + ADAPTERS.map { |name| "#{name}:install" }
 task "adapters:install" => 'install:adapters'
 
 desc "Release adapters"
-task "release:adapters" => [ 'release' ] + ADAPTERS.map { |name| "#{name}:release" }
+task "release:adapters" => ['release'] + ADAPTERS.map { |name| "#{name}:release" }
 task "adapters:release" => 'release:adapters'
 
 task 'release:do' => 'build:adapters' do
@@ -82,9 +82,9 @@ end
 
 # ALL
 
-task "build:all" => [ 'build' ] + TARGETS.map { |name| "#{name}:build" }
+task "build:all" => ['build'] + TARGETS.map { |name| "#{name}:build" }
 task "all:build" => 'build:all'
-task "install:all" => [ 'install' ] + TARGETS.map { |name| "#{name}:install" }
+task "install:all" => ['install'] + TARGETS.map { |name| "#{name}:install" }
 task "all:install" => 'install:all'
 
 begin # allow to roll without Bundler
@@ -121,20 +121,20 @@ if defined? JRUBY_VERSION
 
   directory classes = 'pkg/classes'; CLEAN << classes
 
-  file jar_file => FileList[ classes, 'src/java/**/*.java' ] do
+  file jar_file => FileList[classes, 'src/java/**/*.java'] do
     source = target = '1.6'; debug = true
-    args = [ '-Xlint:unchecked' ]
+    args = ['-Xlint:unchecked']
 
     classpath = []
     classpath += ENV_JAVA['java.class.path'].split(File::PATH_SEPARATOR)
     classpath += ENV_JAVA['sun.boot.class.path'].split(File::PATH_SEPARATOR)
 
-    compile_driver_deps = [ :Postgres, :MySQL ]
+    compile_driver_deps = [:Postgres, :MySQL]
 
     driver_jars = []
-    #compile_driver_deps.each do |name|
-    #  driver_jars << Dir.glob("jdbc-#{name.to_s.downcase}/lib/*.jar").sort.last
-    #end
+    compile_driver_deps.each do |name|
+      driver_jars << Dir.glob("jdbc-#{name.to_s.downcase}/lib/*.jar").sort.last
+    end
     if driver_jars.empty? # likely on a `gem install ...'
       # NOTE: we're currently assuming jdbc-xxx (compile) dependencies are
       # installed, they are declared as gemspec.development_dependencies !
@@ -148,7 +148,7 @@ if defined? JRUBY_VERSION
         gem_name = "jdbc-#{name.to_s.downcase}"; matched_gem_paths = []
         Gem.paths.path.each do |path|
           base_path = File.join(path, "gems/")
-          puts  "base_path #{base_path}"
+          puts "base_path #{base_path}"
           Dir.glob(File.join(base_path, "*")).each do |gem_path|
             if gem_path.sub(base_path, '').start_with?(gem_name)
               matched_gem_paths << gem_path
@@ -164,10 +164,10 @@ if defined? JRUBY_VERSION
     classpath.push *driver_jars
     classpath = classpath.compact.join(File::PATH_SEPARATOR)
 
-    source_files = FileList[ 'src/java/**/*.java' ]
+    source_files = FileList['src/java/**/*.java']
 
     require 'tmpdir'
-    
+
     Dir.mktmpdir do |classes_dir|
 
       javac = "javac -target #{target} -source #{source} #{args.join(' ')}"
@@ -179,7 +179,7 @@ if defined? JRUBY_VERSION
       # avoid environment variable expansion using backslash
       # class_files.gsub!('$', '\$') unless windows?
       # args = class_files.map { |path| [ "-C #{classes_dir}", path ] }.flatten
-      args = [ '-C', "#{classes_dir}/ ." ] # args = class_files
+      args = ['-C', "#{classes_dir}/ ."] # args = class_files
 
       jar_path = jar_file.sub('lib', ENV['RUBYLIBDIR'] || 'lib')
 
