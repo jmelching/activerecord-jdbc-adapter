@@ -148,6 +148,7 @@ if defined? JRUBY_VERSION
         gem_name = "jdbc-#{name.to_s.downcase}"; matched_gem_paths = []
         Gem.paths.path.each do |path|
           base_path = File.join(path, "gems/")
+          puts  "base_path #{base_path}"
           Dir.glob(File.join(base_path, "*")).each do |gem_path|
             if gem_path.sub(base_path, '').start_with?(gem_name)
               matched_gem_paths << gem_path
