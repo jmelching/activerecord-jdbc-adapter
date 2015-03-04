@@ -73,9 +73,6 @@ module ArJdbc
       #end
       self.schema_search_path = config[:schema_search_path] || config[:schema_order]
 
-      # Use standard-conforming strings if available so we don't have to do the E'...' dance.
-      set_standard_conforming_strings
-
       # SET statements from :variables config hash
       # http://www.postgresql.org/docs/8.3/static/sql-set.html
       (config[:variables] || {}).map do |k, v|
