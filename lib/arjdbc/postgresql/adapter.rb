@@ -235,9 +235,9 @@ module ArJdbc
     end if AR4_COMPAT
 
     # Enable standard-conforming strings if available.
-    def set_standard_conforming_strings
-      self.standard_conforming_strings=(true)
-    end
+    # def set_standard_conforming_strings
+    #   self.standard_conforming_strings=(true)
+    # end
 
     # Does PostgreSQL support migrations?
     def supports_migrations?
