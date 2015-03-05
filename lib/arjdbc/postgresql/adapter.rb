@@ -650,6 +650,17 @@ module ArJdbc
       select('SELECT nspname FROM pg_namespace').map { |row| row["nspname"] }
     end
 
+    # Returns the current client message level.
+    def client_min_messages
+      'warning'
+    end
+
+    # Set the client message level.
+    # def client_min_messages=(level)
+    #   execute("SET client_min_messages TO '#{level}'", 'SCHEMA')
+    #
+    # end
+
     # Gets the maximum number columns postgres has, default 32
     def multi_column_index_limit
       @multi_column_index_limit ||= 32
