@@ -655,11 +655,11 @@ module ArJdbc
       'warning'
     end
 
-    # Set the client message level.
-    # def client_min_messages=(level)
-    #   execute("SET client_min_messages TO '#{level}'", 'SCHEMA')
-    #
-    # end
+    #Set the client message level.
+    def client_min_messages=(level)
+      # just skip this for redshift
+      # execute("SET client_min_messages TO '#{level}'", 'SCHEMA')
+    end
 
     # Gets the maximum number columns postgres has, default 32
     def multi_column_index_limit
